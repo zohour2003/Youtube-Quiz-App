@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { data } from "../data/Data";
+// components
 import Result from "./Result";
 import Question from "./Question";
 import toast from "react-hot-toast";
@@ -13,12 +14,11 @@ const Quiz = () => {
 
     const handleAnswer = (selectedOption) => {
         if (selectedOption === data[currentQuestion].answer) {
-            toast.success('Good Job')
+            toast.success("Good Job");
             setCurrentQuestion(currentQuestion + 1);
             setScore(score + 1);
-
         } else {
-            toast.error(selectedOption)
+            toast.error(selectedOption);
         }
         setShowNextButton(true);
     };
@@ -26,16 +26,15 @@ const Quiz = () => {
         const nextQuestion = currentQuestion + 1;
         if (nextQuestion < data.length) {
             setCurrentQuestion(nextQuestion);
-        } else {
+        }
+
+        if (nextQuestion > data.length) {
             setShowResult(true);
+            return;
         }
         setShowNextButton(true);
         setTimer(30);
     };
-
-    if (showResult) {
-        return <Result score={score} totalQuestion={data.length} />;
-    }
 
     useEffect(() => {
         if (timer === 0) {
@@ -56,11 +55,16 @@ const Quiz = () => {
                         Questions: {currentQuestion + 1} / {data.length}
                     </h2>
                 </div>
-                <div className="timer bg-green-600 text-white px-8 py-3 rounded-lg font-thin">Time Left : {timer} seconds</div>
+                <div className="timer bg-green-600 text-white px-8 py-3 rounded-lg font-thin">
+                    Time Left : {timer} seconds
+                </div>
             </div>
+
+            {showResult && <Result score={score} totalQuestion={data.length} />}
+
             <Question
-                question={data[currentQuestion].question}
-                options={data[currentQuestion].options}
+                question={data[currentQuestion]?.question}
+                options={data[currentQuestion]?.options}
                 onAnswer={handleAnswer}
                 onNext={handleNext}
                 showNextButton={showNextButton}
